@@ -7,6 +7,15 @@ contract Allowance {
     uint256 tokens;
 
     string task;
+    bool taskCompleted;
+
+    // TODO: How to create a struct / object?
+    // Task should have:
+    //  Description / Text
+    //  Child Signature
+    //  Parent Signature
+    //  Completed Boolean
+    //  Reward Value
 
     // Steps:
     //  1) Create a pool of tokens for the parent to dole out
@@ -22,6 +31,7 @@ contract Allowance {
     // constructor(uint256 _tokens) public {
     //     parent = msg.sender;
     //     tokens = _tokens;
+    //     taskComleted = false;
     // }
 
     // Allow users to set a finite amount of tokens
@@ -46,6 +56,10 @@ contract Allowance {
     // Add a new child
     function addChild(address _child) public {
         child = _child;
+    }
+
+    function markTaskCompleted() public {
+        taskCompleted = true;
     }
 
     // TODO: Allow multiple parents

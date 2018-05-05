@@ -21,4 +21,8 @@ contract Allowance {
         parent = msg.sender;
         tokens = _tokens;
     }
+
+    // TODO: Allow multiple parents
+    // TODO: Allow multiple children
+    // TODO: Allow sign-off by 1 to n parents
 }

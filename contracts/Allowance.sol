@@ -1,10 +1,12 @@
-pragma solidity 0.4.23;
+pragma solidity 0.4.18;
 
 contract Allowance {
     address parent;
     address child;
 
     uint256 tokens;
+
+    string task;
 
     // Steps:
     //  1) Create a pool of tokens for the parent to dole out
@@ -17,9 +19,33 @@ contract Allowance {
     //  6) Child may redeem tokens to earn cash, screen time, etc.
     //  7) Upon redemption, tokens are sent back to parent
 
-    constructor(uint256 _tokens) public {
-        parent = msg.sender;
-        tokens = _tokens;
+    // constructor(uint256 _tokens) public {
+    //     parent = msg.sender;
+    //     tokens = _tokens;
+    // }
+
+    // Allow users to set a finite amount of tokens
+    // Basically how much the parents are willing to provide each week
+    function createAllowanceTokens(uint256 _tokens) private {
+        if(parent == msg.sender){
+            tokens = _tokens;
+        }
+    }
+
+    // Create a new task
+    function addTask(string _task) public {
+        task = _task;
+    }
+
+    // Add a new parent -- second, third etc
+    // First parent should come from contract creations / msg.sender in constructor
+    function addParent(address _parent) public {
+        parent = _parent;
+    }
+
+    // Add a new child
+    function addChild(address _child) public {
+        child = _child;
     }
 
     // TODO: Allow multiple parents

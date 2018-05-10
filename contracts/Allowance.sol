@@ -1,21 +1,44 @@
 pragma solidity 0.4.18;
 
+
 contract Allowance {
-    address parent;
-    address child;
+    // Parent
+    struct Parent {
+        address id;
+        string name;
+    }
 
-    uint256 tokens;
+    mapping (address => Parent) public parents;
 
-    string task;
-    bool taskCompleted;
+    // Child
+    struct Child {
+        address id;
+        string name;
+    }
 
-    // TODO: How to create a struct / object?
-    // Task should have:
-    //  Description / Text
-    //  Child Signature
-    //  Parent Signature
-    //  Completed Boolean
-    //  Reward Value
+    mapping (address => Child) public children;
+
+    // Task
+    struct Task {
+        uint id;
+        address parent;
+        uint reward;
+        string name;
+        string description;
+        bool completed;
+        bool approved;
+    }
+
+    mapping (uint => Task) public tasks;
+
+    uint256 public maxTokens;
+
+    uint public taskCounter;
+
+    function Allowance(uint _tokens) {
+        // Set the number of tokens to the chosen amount
+        maxTokens = _tokens;
+    }
 
     // Steps:
     //  1) Create a pool of tokens for the parent to dole out
@@ -27,42 +50,45 @@ contract Allowance {
     //  5) Upon agreed-upon completion, token is transferred to child's account
     //  6) Child may redeem tokens to earn cash, screen time, etc.
     //  7) Upon redemption, tokens are sent back to parent
-
-    // constructor(uint256 _tokens) public {
-    //     parent = msg.sender;
-    //     tokens = _tokens;
-    //     taskComleted = false;
-    // }
-
-    // Allow users to set a finite amount of tokens
-    // Basically how much the parents are willing to provide each week
-    function createAllowanceTokens(uint256 _tokens) private {
-        if(parent == msg.sender){
-            tokens = _tokens;
-        }
-    }
+    // Events
+    event LogAddTask(
+        uint indexed _id,
+        address indexed _parent,
+        uint _reward,
+        string _name
+    );
 
     // Create a new task
-    function addTask(string _task) public {
-        task = _task;
+    function addTask(uint _reward, string _name, string _description) public {
+        taskCounter++;
+
+        // Need to require that the msg.sender is a parent
+        tasks[taskCounter] = Task(
+            taskCounter,    // ID
+            msg.sender,     // Parent
+            _reward,        // Reward
+            _name,          // Name
+            _description,   // Description
+            false,          // Completed
+            false           // Approved
+        );
+
+        LogAddTask(taskCounter, msg.sender, _reward, _name);
     }
 
     // Add a new parent -- second, third etc
     // First parent should come from contract creations / msg.sender in constructor
-    function addParent(address _parent) public {
-        parent = _parent;
-    }
+    // function addParent(address _parent) public {
+    //     parent = _parent;
+    // }
 
     // Add a new child
-    function addChild(address _child) public {
-        child = _child;
-    }
+    // function addChild(address _child) public {
+    //     child = _child;
+    // }
 
-    function markTaskCompleted() public {
-        taskCompleted = true;
-    }
-
-    // TODO: Allow multiple parents
-    // TODO: Allow multiple children
+    // function markTaskCompleted() public {
+    //     taskCompleted = true;
+    // }
     // TODO: Allow sign-off by 1 to n parents
 }

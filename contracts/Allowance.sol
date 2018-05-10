@@ -62,7 +62,7 @@ contract Allowance {
     function addTask(uint _reward, string _name, string _description) public {
         taskCounter++;
 
-        // Need to require that the msg.sender is a parent
+        // TODO: Need to require that the msg.sender is a parent
         tasks[taskCounter] = Task(
             taskCounter,    // ID
             msg.sender,     // Parent
@@ -74,6 +74,11 @@ contract Allowance {
         );
 
         LogAddTask(taskCounter, msg.sender, _reward, _name);
+    }
+
+    // Get number of tasks
+    function getNumberOfTasks() public view returns (uint) {
+        return taskCounter;
     }
 
     // Add a new parent -- second, third etc
@@ -90,5 +95,4 @@ contract Allowance {
     // function markTaskCompleted() public {
     //     taskCompleted = true;
     // }
-    // TODO: Allow sign-off by 1 to n parents
 }

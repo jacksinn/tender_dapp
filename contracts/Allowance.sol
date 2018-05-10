@@ -17,6 +17,7 @@ contract Allowance {
     struct Child {
         address id;
         string name;
+        uint balance;
     }
 
     mapping (address => Child) public children;
@@ -84,6 +85,30 @@ contract Allowance {
     // Get number of tasks
     function getNumberOfTasks() public view returns (uint) {
         return taskCounter;
+    }
+
+    // Getting tasks that are available
+    function getAvailableTasks() public view returns (uint[]) {
+        // Setup initial vars
+        uint[] memory taskIDs = new uint[](taskCounter);
+        uint numberOfAvailableTasks = 0;
+
+        // Copy over the Taks IDs if the task is still available 
+        //  and increment number of available takss
+        for (uint i = 1; i <= taskCounter; i++) {
+            if (tasks[i].completed == false) {
+                taskIDs[numberOfAvailableTasks] = tasks[i].id;
+                numberOfAvailableTasks++;
+            }
+        }
+
+        // Create an appropriate sized array to return
+        uint[] memory available = new uint[](numberOfAvailableTasks);
+        for (uint j = 0; j < numberOfAvailableTasks; j++) {
+            available[j] = taskIDs[j];
+        }
+
+        return available;
     }
 
     // Add a new parent -- second, third etc

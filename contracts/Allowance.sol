@@ -2,7 +2,10 @@ pragma solidity 0.4.18;
 
 
 contract Allowance {
-    // Parent
+
+    address owner;
+
+    // Parents section
     struct Parent {
         address id;
         string name;
@@ -10,7 +13,7 @@ contract Allowance {
 
     mapping (address => Parent) public parents;
 
-    // Child
+    // Child section
     struct Child {
         address id;
         string name;
@@ -18,7 +21,7 @@ contract Allowance {
 
     mapping (address => Child) public children;
 
-    // Task
+    // Task section
     struct Task {
         uint id;
         address parent;
@@ -30,14 +33,14 @@ contract Allowance {
     }
 
     mapping (uint => Task) public tasks;
+    uint public taskCounter;
 
     uint256 public maxTokens;
 
-    uint public taskCounter;
-
-    function Allowance(uint _tokens) {
-        // Set the number of tokens to the chosen amount
-        maxTokens = _tokens;
+    // Constructor
+    function Allowance() public {
+        owner = msg.sender;
+        maxTokens = 128;
     }
 
     // Steps:
@@ -63,6 +66,8 @@ contract Allowance {
         taskCounter++;
 
         // TODO: Need to require that the msg.sender is a parent
+        require(owner == msg.sender);
+
         tasks[taskCounter] = Task(
             taskCounter,    // ID
             msg.sender,     // Parent

@@ -9,6 +9,9 @@ contract Allowance {
     struct Parent {
         address id;
         string name;
+        // TODO: Add children array here so children are only associated with their parents
+        // This may lead to children (addresses) being added to other parents 
+        //  but the parents would have to know the child's address.
     }
 
     mapping (address => Parent) public parents;

@@ -67,6 +67,11 @@ contract Allowance {
         string _name
     );
 
+    event LogAddChild(
+        address indexed _child,
+        string _name
+    );
+
     // Create a new task
     function addTask(uint _reward, string _name, string _description) public {
         taskCounter++;
@@ -118,25 +123,31 @@ contract Allowance {
 
     // Adding a parent
     function addParent(address _parent, string _name) public {
-        parents[msg.sender] = Parent(
+        // For now require parent to be added by owner
+        require(msg.sender == owner);
+
+        parents[_parent] = Parent(
             _parent,
             _name
         );
         LogAddParent(_parent, _name);
     }
 
-    // Add a new parent -- second, third etc
-    // First parent should come from contract creations / msg.sender in constructor
-    // function addParent(address _parent) public {
-    //     parent = _parent;
-    // }
+    // Adding a parent
+    function addChild(address _child, string _name) public {
+        // For now require parent to be added by owner
+        require(msg.sender == owner);
 
-    // Add a new child
-    // function addChild(address _child) public {
-    //     child = _child;
-    // }
+        children[_child] = Child(
+            _child,
+            _name,
+            0
+        );
+        LogAddChild(_child, _name);
+    }
 
-    // function markTaskCompleted() public {
-    //     taskCompleted = true;
-    // }
+    function markTaskCompleted(uint id) public {
+        require(msg.sender == owner);
+        tasks[id].completed = true;
+    }
 }

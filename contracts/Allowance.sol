@@ -62,6 +62,11 @@ contract Allowance {
         string _name
     );
 
+    event LogAddParent(
+        address indexed _parent,
+        string _name
+    );
+
     // Create a new task
     function addTask(uint _reward, string _name, string _description) public {
         taskCounter++;
@@ -109,6 +114,15 @@ contract Allowance {
         }
 
         return available;
+    }
+
+    // Adding a parent
+    function addParent(address _parent, string _name) public {
+        parents[msg.sender] = Parent(
+            _parent,
+            _name
+        );
+        LogAddParent(_parent, _name);
     }
 
     // Add a new parent -- second, third etc
